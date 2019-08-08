@@ -66,15 +66,17 @@ extern "C" {
 
 #if !defined(OPENSSL_NO_ASM)
 
-#if defined(OPENSSL_S390X)
-#define HWDES
+# if defined(OPENSSL_S390X)
+#  define HWDES
 
 OPENSSL_INLINE int hwdes_capable(void) {
   return is_s390x_capable();
 }
+# endif // !OPENSSL_S390X
 
+#endif // OPENSSL_NO_ASM
 
-#if defined(HWDES)
+# if defined(HWDES)
 
 int des_hw_set_encrypt_key(const uint8_t *user_key, const int bits,
                            DES_KEY *key);
@@ -87,7 +89,7 @@ void des_hw_cbc_encrypt(const uint8_t *in, uint8_t *out, size_t length,
 void des_hw_ctr32_encrypt_blocks(const uint8_t *in, uint8_t *out, size_t len,
                                  const DES_KEY *key, const uint8_t ivec[16]);
 
-#else
+# else
 
 // If HWDES isn't defined then we provide dummy functions for each of the hwdes
 // functions.
@@ -132,7 +134,7 @@ OPENSSL_INLINE void des_hw_ncbc_encrypt_blocks(unsigned int function_code,
                                                 unsigned char *output_data) 
 
 
-#endif  // !HWDES
+# endif  // !HWDES
  
 
 #define c2l(c, l)                         \
